@@ -62,8 +62,8 @@ int main()
     cout << "Original arrival records after sorting:" << endl;
     displayParcels(parcels, CAPACITY);
 
-    // --- STEP D1: Activate after completing the search function ---
-    /*
+     //--- STEP D1: Activate after completing the search function ---
+    
     int target;
 
     cout << "Enter a pickup code: ";
@@ -88,7 +88,7 @@ int main()
              << readyView[position]->locker
              << endl;
     }
-    */
+    
 
     return 0;
 }
@@ -161,7 +161,27 @@ void quickSortReady(Parcel *view[], int first, int last)
 
 int binaryFindReady(Parcel *view[], int count, int target)
 {
-    // TODO (Part D): Implement iterative binary search by pickupCode on the sorted view.
+    int first = 0;
+    int last = count - 1;
+
+    while (first <= last)
+    {
+        int middle = first + (last - first) / 2;
+
+        if (view[middle]->pickupCode == target)
+        {
+            return middle;
+        }
+
+        if (view[middle]->pickupCode < target)
+        {
+            first = middle + 1;
+        }
+        else
+        {
+            last = middle - 1;
+        }
+    }
 
     return -1;
 }
@@ -257,10 +277,68 @@ void displayReady(Parcel *view[], int count)
  *
  *
  * D3 - Search positions and absence
- * Trace code 505 and absent code 460.
- * Answer:
+ *
+ * Search for code 505:
+ *
+ * Sorted ready view:
+ * 190, 325, 505, 580, 640, 710
+ *
+ * first = 0, last = 5, middle = 2
+ * Code at view[2] is 505.
+ * 505 == 505, so the function returns view index 2.
+ *
+ * Code 505 is originally stored in a different position inside
+ * the parcels array. The returned value is an index of readyView,
+ * not an index of parcels.
+ *
+ *
+ * Search for code 460:
+ *
+ * first = 0, last = 5, middle = 2, code = 505
+ * 505 > 460, so last becomes 1.
+ *
+ * first = 0, last = 1, middle = 0, code = 190
+ * 190 < 460, so first becomes 1.
+ *
+ * first = 1, last = 1, middle = 1, code = 325
+ * 325 < 460, so first becomes 2.
+ *
+ * Now first = 2 and last = 1.
+ * Since first > last, the search ends and returns -1.
+ *
+ * Code 460 exists in the original parcels array, but it is not ready,
+ * so it was never added to readyView.
+ *
+ * A view index cannot be used directly as an index into parcels because
+ * readyView is filtered and reordered. Each view position stores a pointer
+ * to the original Parcel object.
+ *
  *
  * D4 - Time and auxiliary space
- * Compare sorting once + binary search vs repeated scanning.
- * Answer:
+ *
+ * If the ready view is scanned for every query:
+ * q searches take O(qn) time.
+ *
+ * If the view is sorted once and then binary search is used:
+ *
+ * Quicksort worst case:
+ * O(n^2)
+ *
+ * Quicksort with balanced partitions:
+ * O(n log n)
+ *
+ * Each binary search:
+ * O(log n)
+ *
+ * Balanced total for q searches:
+ * O(n log n + q log n)
+ *
+ * Worst-case total:
+ * O(n^2 + q log n)
+ *
+ * Iterative binary search uses O(1) auxiliary space.
+ *
+ * The pointer view itself uses O(n) storage.
+ * Quicksort also uses recursive call space:
+ * O(log n) with balanced partitions and O(n) in the worst case.
  */
