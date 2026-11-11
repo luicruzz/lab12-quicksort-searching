@@ -117,18 +117,11 @@ int partitionReady(Parcel *view[], int first, int last)
         if (view[scan]->pickupCode < pivotCode)
         {
             boundary++;
-
-            swapParcelPointers(
-                view[boundary],
-                view[scan]
-            );
+            swapParcelPointers(view[boundary], view[scan]);
         }
     }
 
-    swapParcelPointers(
-        view[first],
-        view[boundary]
-    );
+    swapParcelPointers(view[first], view[boundary]);
 
     return boundary;
 }
@@ -140,22 +133,11 @@ void quickSortReady(Parcel *view[], int first, int last)
         return;
     }
 
-    int pivotIndex =
-        partitionReady(view, first, last);
+    int pivotIndex = partitionReady(view, first, last);
 
-    quickSortReady(
-        view,
-        first,
-        pivotIndex - 1
-    );
-
-    quickSortReady(
-        view,
-        pivotIndex + 1,
-        last
-    );
+    quickSortReady(view, first, pivotIndex - 1);
+    quickSortReady(view, pivotIndex + 1, last);
 }
-
 
 // ===== Resolve this TODO later (Part D) =====
 
